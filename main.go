@@ -2,7 +2,10 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
+	"log/slog"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -29,5 +32,12 @@ func main() {
 			w.Write(bytes)
 		},
 	)
-	http.ListenAndServe(":8080", nil)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	hostname := fmt.Sprintf(":%s", port)
+	slog.Info("starting server...", "hostname", hostname)
+	http.ListenAndServe(hostname, nil)
 }
