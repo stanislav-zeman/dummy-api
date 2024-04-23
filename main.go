@@ -9,12 +9,32 @@ import (
 	"time"
 )
 
+type Message struct {
+	Message string
+}
+
 type Status struct {
 	Status string
 	Time   time.Time
 }
 
 func main() {
+	http.HandleFunc(
+		"/",
+		func(w http.ResponseWriter, r *http.Request) {
+			m := Message{
+				Message: "Hello world!",
+			}
+
+			bytes, err := json.Marshal(m)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+
+			w.Write(bytes)
+		},
+	)
 	http.HandleFunc(
 		"/status",
 		func(w http.ResponseWriter, r *http.Request) {
